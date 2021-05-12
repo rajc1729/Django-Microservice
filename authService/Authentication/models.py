@@ -14,13 +14,13 @@ class CustomUser(AbstractUser):
     country = CountryField(blank_label='(select country)', blank=True, default='US')
     latitude = models.FloatField(blank=True, null=True)
     longitude = models.FloatField(blank=True, null=True)
-
-
+    is_employer = models.BooleanField(default=False)
+    is_employee = models.BooleanField(default=False)
 
 class Employer(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    company_name = models.CharField(max_length=100, blank=True, null=True, default="")
+    company_name = models.CharField(unique=True, max_length = 50)
 
 
 class Employee(models.Model):
