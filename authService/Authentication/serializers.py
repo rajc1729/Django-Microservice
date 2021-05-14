@@ -5,6 +5,10 @@ from rest_auth.registration.serializers import RegisterSerializer
 from Authentication.models import CustomUser, Employer, Employee
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
+from pymongo import MongoClient
+
+mongoClient = MongoClient(host="localhost", port=27017)
+db = mongoClient.location
 
 class MyRegistrationSerializer(RegisterSerializer):
     first_name = serializers.CharField(required=True, write_only=True)
@@ -19,7 +23,7 @@ class MyRegistrationSerializer(RegisterSerializer):
     # employer
     company_name = serializers.CharField(required=False)
     # employee
-    employer = serializers.CharField(required=False)
+    employer_name = serializers.CharField(required=False)
 
     def get_cleaned_data(self):
         return {
@@ -36,28 +40,27 @@ class MyRegistrationSerializer(RegisterSerializer):
             'longitude': self.validated_data.get('longitude', 0),
             'type': self.validated_data.get('type', 'employer'),
             'company_name': self.validated_data.get('company_name', ''),
-            'employer': self.validated_data.get('employer', ''),
-            'employer_name': self.validated_data.get('employer', ''),
+            # 'employer': self.validated_data.get('employer', ''),
+            'employer_name': self.validated_data.get('employer_name', ''),
         }
     
     
     
     def validate(self, data):
         super().validate(data)
-        print(data)
 
         if data['type']=='employer':
             if 'company_name' not in data:
                 raise serializers.ValidationError(_("company_name is required."))
             # add error chec for same companey
         elif data['type'] == 'employee':
-            if 'employer' not in data:
-                raise serializers.ValidationError(_("employer name is required."))
+            if 'employer_name' not in data:
+                raise serializers.ValidationError(_("employer_name is required."))
             # add error check for whether employeer is there
             else:
-                self.employer = Employer.objects.filter(company_name=data['employer'])
+                self.employer = Employer.objects.filter(company_name=data['employer_name'])
                 if not self.employer.exists():
-                    raise serializers.ValidationError(_("employer name is not valid."))
+                    raise serializers.ValidationError(_("employer_name is not valid."))
                 else:
                     self.employer = self.employer[0]
 
@@ -67,7 +70,7 @@ class MyRegistrationSerializer(RegisterSerializer):
     def save(self, request):
         # employer
         type = request.data.get('type')
-        company_name = request.data.get('company_name')
+        company_name = request.data.get('employer_name')
 
         adapter = get_adapter()
         user = adapter.new_user(request)
@@ -85,6 +88,24 @@ class MyRegistrationSerializer(RegisterSerializer):
             adapter.save_user(request, user, self, commit=True)
             setup_user_email(request, user, [])
             Employee.objects.create(user = user, employer = self.employer)
+            
+            collection = db[str(company_name)]
+
+            mongoData = {
+                'first_name' : self.cleaned_data['first_name'],
+                'last_name' : self.cleaned_data['last_name'],
+                'email' : self.cleaned_data['email'],
+                'username' : self.cleaned_data['username'],
+                'address1' : self.cleaned_data['address1'],
+                'address2' : self.cleaned_data['address2'],
+                'city' : self.cleaned_data['city'],
+                'country' : self.cleaned_data['country'],
+                'latitude' : self.cleaned_data['latitude'],
+                'longitude' : self.cleaned_data['longitude'],
+                'country' : self.cleaned_data['country'],
+                'employer_name' : self.cleaned_data['employer_name'],
+            }
+            collection.insert_one(mongoData)
     
         return user
 

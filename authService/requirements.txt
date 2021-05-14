@@ -8,3 +8,4 @@ django-allauth>=0.44.0,<0.45
 django-countries
 django-filter
 django-rest-auth
+pymongo

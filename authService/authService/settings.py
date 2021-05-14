@@ -56,8 +56,6 @@ INSTALLED_APPS = [
 
 SITE_ID = 1
 
-WSGI_APPLICATION = 'CollabCafe.wsgi.application'
-
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
