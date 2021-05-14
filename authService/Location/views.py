@@ -3,6 +3,12 @@ from rest_framework import generics
 from Authentication.models import Employee
 from .serializers import EmployeeSerializer
 from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.conf import settings
+import jwt
+import time
 
 class EmployeeView(generics.RetrieveAPIView):
     queryset = Employee.objects.all()
@@ -20,3 +26,24 @@ class EmployeeView(generics.RetrieveAPIView):
     #     company_name = self.request.GET.get(self.lookup_field, None)
     #     obj = get_object_or_404(queryset, company_name = company_name)
     #     return obj
+
+class get_websocket_token(APIView):
+
+    def create_token(self, user_uuid: str):
+
+        now = int(time.time())
+        token_lifetime = settings.WEBSOCKET_TOKEN_LIFETIME.total_seconds()
+
+        payload = {
+            'uid': user_uuid,
+            'iat': now,
+            'exp': now + int(token_lifetime),
+        }
+        return jwt.encode(payload, settings.WEBSOCKET_TOKEN_KEY)
+
+
+    def get(self, request, *args, **kwargs):
+
+        token = self.create_token(str(request.user.pk))
+        obj = {'websocket_token': token}
+        return Response(obj, status=status.HTTP_200_OK)
