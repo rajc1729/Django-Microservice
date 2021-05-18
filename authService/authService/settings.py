@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-nd73-aj=y&n*@ugk2dn)_qwzpy4+s+^y^&mj#4qp^30=c4!cw7'
 
 WEBSOCKET_TOKEN_KEY = '*ru#img7tp0&2e&4$2_6r&65r5oju@$6th=s9be02gqs@%!u*9'
-WEBSOCKET_TOKEN_LIFETIME = timedelta(seconds=30)
+WEBSOCKET_TOKEN_LIFETIME = timedelta(days=2)
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
