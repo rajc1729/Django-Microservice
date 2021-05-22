@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django_celery_beat',
 ]
 
 
@@ -56,8 +58,14 @@ CHANNEL_LAYERS = {
         "CONFIG": {
             "hosts": [('127.0.0.1', 6379)],
         },
-        # "ROUTING": "CollabCafe.routing.channel_routing",
-        # "BACKEND": "channels.layers.InMemoryChannelLayer"
+    },
+}
+
+
+CELERY_BEAT_SCHEDULE = {
+    'task-real': {
+        'task': 'realtime_task',
+        'schedule': 5 # this means, the task will run itself every second
     },
 }
 
@@ -157,3 +165,7 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_HOST_PASSWORD = ''
 # EMAIL_USE_TLS = True
 # EMAIL_PORT = 587
+
+CELERY_IMPORTS = ['websocketService.tasks']
+CELERY_BROKER_URL = "redis://localhost:6379/4"
+CELERY_RESULT_BACKEND = "redis://localhost:6379/4"

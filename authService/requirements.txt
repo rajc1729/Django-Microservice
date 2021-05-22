@@ -11,3 +11,4 @@ django-rest-auth
 pymongo
 channels
 channels_redis
+django-celery-beat
