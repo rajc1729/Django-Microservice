@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework import generics
-from Authentication.models import Employee
+from Authentication.models import Employee, Employer
 from .serializers import EmployeeSerializer
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
@@ -45,5 +45,6 @@ class get_websocket_token(APIView):
     def get(self, request, *args, **kwargs):
 
         token = self.create_token(str(request.user.pk))
-        obj = {'websocket_token': token}
+        employer = Employer.objects.filter(user=request.user).first()
+        obj = {'websocket_token': token, 'company_name': employer.company_name}
         return Response(obj, status=status.HTTP_200_OK)

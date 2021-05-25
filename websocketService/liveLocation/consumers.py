@@ -39,7 +39,6 @@ class liveEmployeeConsumer(AsyncJsonWebsocketConsumer):
         )
         await self.accept()
         data = await self._getData()
-
         await self.send_json({'data': data,  'status': 200})
 
 

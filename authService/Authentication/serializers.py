@@ -20,10 +20,9 @@ class MyRegistrationSerializer(RegisterSerializer):
     latitude = serializers.FloatField(required=True)
     longitude = serializers.FloatField(required=True)
     type = serializers.CharField(required=True)
-    # employer
+
     company_name = serializers.CharField(required=False)
-    # employee
-    employer_name = serializers.CharField(required=False)
+
 
     def get_cleaned_data(self):
         return {
@@ -40,8 +39,6 @@ class MyRegistrationSerializer(RegisterSerializer):
             'longitude': self.validated_data.get('longitude', 0),
             'type': self.validated_data.get('type', 'employer'),
             'company_name': self.validated_data.get('company_name', ''),
-            # 'employer': self.validated_data.get('employer', ''),
-            'employer_name': self.validated_data.get('employer_name', ''),
         }
     
     
@@ -54,13 +51,13 @@ class MyRegistrationSerializer(RegisterSerializer):
                 raise serializers.ValidationError(_("company_name is required."))
             # add error chec for same companey
         elif data['type'] == 'employee':
-            if 'employer_name' not in data:
-                raise serializers.ValidationError(_("employer_name is required."))
+            if 'company_name' not in data:
+                raise serializers.ValidationError(_("company_name is required."))
             # add error check for whether employeer is there
             else:
-                self.employer = Employer.objects.filter(company_name=data['employer_name'])
+                self.employer = Employer.objects.filter(company_name=data['company_name'])
                 if not self.employer.exists():
-                    raise serializers.ValidationError(_("employer_name is not valid."))
+                    raise serializers.ValidationError(_("company_name is not valid."))
                 else:
                     self.employer = self.employer[0]
 
@@ -70,7 +67,7 @@ class MyRegistrationSerializer(RegisterSerializer):
     def save(self, request):
         # employer
         type = request.data.get('type')
-        company_name = request.data.get('employer_name')
+        company_name = request.data.get('company_name')
 
         adapter = get_adapter()
         user = adapter.new_user(request)
@@ -91,6 +88,7 @@ class MyRegistrationSerializer(RegisterSerializer):
             
             collection = db[str(company_name)]
 
+
             mongoData = {
                 'first_name' : self.cleaned_data['first_name'],
                 'last_name' : self.cleaned_data['last_name'],
@@ -103,7 +101,7 @@ class MyRegistrationSerializer(RegisterSerializer):
                 'latitude' : self.cleaned_data['latitude'],
                 'longitude' : self.cleaned_data['longitude'],
                 'country' : self.cleaned_data['country'],
-                'employer_name' : self.cleaned_data['employer_name'],
+                'company_name' : self.cleaned_data['company_name'],
             }
             collection.insert_one(mongoData)
     

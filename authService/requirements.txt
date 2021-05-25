@@ -12,3 +12,5 @@ pymongo
 channels
 channels_redis
 django-celery-beat
+django-cors-headers
+
