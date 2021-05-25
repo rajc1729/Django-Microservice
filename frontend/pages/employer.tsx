@@ -2,7 +2,6 @@ import { useRouter } from "next/router";
 import { useRef, useState, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Header from "../components/header";
-import { EmployeeModel } from "../models/types";
 import { apiCall } from "../service/common";
 const DynamicMap = dynamic(() => import("../components/DynamicMap"), {
   loading: () => <p>Loading...</p>,

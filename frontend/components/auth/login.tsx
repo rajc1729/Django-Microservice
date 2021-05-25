@@ -61,10 +61,8 @@ const Login: React.SFC<{}> = () => {
       setLoginError(res.error);
     } else if (res.user && res.user.is_employer) {
       router.push("/employer");
-      //   console.log("employer");
     } else if (res.user && res.user.is_employee) {
       router.push("/employee");
-      //   console.log("employee");
     }
   };
 

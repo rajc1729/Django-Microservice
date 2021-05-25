@@ -1,4 +1,3 @@
-import Head from "next/head";
 import Link from "next/link";
 import styles from "../styles/components/header.module.scss";
 import React from "react";
@@ -7,7 +6,7 @@ import { getCookie } from "../service/cookie";
 import { useRouter } from "next/router";
 import { signOut } from "../service/auth";
 
-export default function Header() {
+const Header: React.SFC<{}> = () => {
   const [accessToken, setAccessToken] = useState(null);
   const [role, setRole] = useState(null);
   const router = useRouter();
@@ -62,11 +61,11 @@ export default function Header() {
                 </button>
               )}
               {!accessToken ? (
-                <button className={styles.bold}>
-                  <Link href={{ pathname: "/signup" }}>
+                <Link href={{ pathname: "/signup" }}>
+                  <button className={styles.bold}>
                     <a title="signup"> Sign Up </a>
-                  </Link>
-                </button>
+                  </button>
+                </Link>
               ) : (
                 <button onClick={handleLogout} className={styles.bold}>
                   <a title="logout"> Logout </a>
@@ -78,4 +77,6 @@ export default function Header() {
       </header>
     </>
   );
-}
+};
+
+export default Header;

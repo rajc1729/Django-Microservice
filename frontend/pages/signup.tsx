@@ -1,4 +1,3 @@
-import Login from "../components/auth";
 import SignUp from "../components/auth/signup";
 import Header from "../components/header";
 

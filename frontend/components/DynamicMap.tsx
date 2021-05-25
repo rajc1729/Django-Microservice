@@ -66,7 +66,7 @@ const DynamicMap: React.SFC<DynamicMapProps> = ({ data }) => {
       {...viewport}
       onViewportChange={(viewport) => setViewport(viewport)}
       mapboxApiAccessToken={
-        "pk.eyJ1IjoicmFqYzE3MjkiLCJhIjoiY2tvdHM4MmZiMGNjaDJwcGgxb3A3aHQ3byJ9.uKQIm547_V_3OPS9Q0LR4g"
+        process.env.NEXT_PUBLIC_REACT_APP_MAPBOX_ACCESS_TOKEN
       }
       mapStyle="mapbox://styles/mapbox/dark-v10"
     >

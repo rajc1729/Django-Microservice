@@ -1,5 +1,4 @@
 import { setCookie, getCookie } from "./cookie";
-import Router from "next/router";
 import { apiBaseUrl } from "../config/environment";
 import { registerUser, UserModel } from "../models/types";
 
@@ -58,7 +57,7 @@ export const loginWithUsername = async (username: string, password: string) => {
 
 /**
  * Register directly w/ sign up form
- * @param {IUserRegister} userData - User's registration information
+ * @param {UserModel} userData - User's registration information
  */
 export const signUpApiCall = async (userData: registerUser) => {
   var myHeaders = new Headers();
@@ -68,35 +67,6 @@ export const signUpApiCall = async (userData: registerUser) => {
   Object.keys(userData).forEach((key) => {
     urlencoded.append(key, userData[key]);
   });
-  // urlencoded.append("username", userData.username);
-  // urlencoded.append("email", userData.email);
-  // urlencoded.append("password1", userData.password1);
-  // urlencoded.append("password2", userData.password2);
-  // urlencoded.append("first_name", userData.first_name);
-  // urlencoded.append("last_name", userData.last_name);
-  // urlencoded.append("address1", userData.address1);
-  // urlencoded.append("address1", userData.address2);
-  // urlencoded.append("city", userData.city);
-  // urlencoded.append("country", userData.country);
-  // urlencoded.append("latitude", userData.latitude);
-  // urlencoded.append("longitude", userData.longitude);
-  // urlencoded.append("type", userData.type);
-  // urlencoded.append("company_name", userData.company_name);
-
-  // urlencoded.append("username", "ari2");
-  // urlencoded.append("email", "ari2@outl.com");
-  // urlencoded.append("password1", "Hello@123");
-  // urlencoded.append("password2", "Hello@123");
-  // urlencoded.append("first_name", "ari");
-  // urlencoded.append("last_name", "naan");
-  // urlencoded.append("address1", "20404");
-  // urlencoded.append("address1", "g44");
-  // urlencoded.append("city", "fullerton");
-  // urlencoded.append("country", "US");
-  // urlencoded.append("latitude", "37.8199");
-  // urlencoded.append("longitude", "122.4783");
-  // urlencoded.append("type", "employee");
-  // urlencoded.append("company_name", "csuf1");
 
   const requestOptions = {
     method: "POST",
@@ -130,28 +100,6 @@ const addMinutes = (dt: Date, minutes: number) => {
 const addDays = (dt: Date, days: number) => {
   return new Date(dt.getTime() + days * 86400000);
 };
-
-// export const getProfile = (accessToken) => {
-//   const url = `${apiBaseUrl.url}profile/`;
-//   var myheaders = new Headers();
-//   myheaders.append("Authorization", "Bearer " + accessToken);
-//   const requestOptions = {
-//     method: "GET",
-//     headers: myheaders,
-//   };
-//   // console.log("fetchhhhhhhhhhhhhhhhhh")
-//   return fetch(url, requestOptions)
-//     .then((res) => {
-//       if (res.status === 200) {
-//         return res.json();
-//       } else {
-//         throw res;
-//       }
-//     })
-//     .catch((error) => {
-//       return error.json();
-//     });
-// };
 
 export const refreshToken = () => {};
 
@@ -187,12 +135,10 @@ export const refreshTokenToAccessToken = (refresh_token: string) => {
       }
     })
     .then((result) => {
-      // console.log(result);
       setCookie("access_token", result.access, addMinutes(new Date(), 1440)); //1 day
       return result;
     })
     .catch((error) => {
-      // console.log(error);
       return { error: error.json() };
     })
     .then((result) => {

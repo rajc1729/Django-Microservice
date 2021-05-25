@@ -4,7 +4,7 @@ import Head from "next/head";
 import Link from "next/link";
 import styles from "../../styles/login.module.scss";
 import CustomButton from "../buttons/button";
-import { loginWithUsername, signUpApiCall } from "../../service/auth";
+import { signUpApiCall } from "../../service/auth";
 import { getCookie } from "../../service/cookie";
 import { registerUser } from "../../models/types";
 
@@ -154,10 +154,8 @@ const SignUp: React.SFC<{}> = () => {
 
     if (res.user && res.user.is_employer) {
       router.push("/employer");
-      //   console.log("employer");
     } else if (res.user && res.user.is_employee) {
       router.push("/employee");
-      //   console.log("employee");
     } else if (res.error) {
       console.log(res);
       setSignUpError(res.error);
