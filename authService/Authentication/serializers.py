@@ -6,11 +6,13 @@ from Authentication.models import CustomUser, Employer, Employee
 from django.db import transaction
 from django.utils.translation import ugettext_lazy as _
 from pymongo import MongoClient
+from django_countries.serializers import CountryFieldMixin
+
 
 mongoClient = MongoClient(host="localhost", port=27017)
 db = mongoClient.location
 
-class MyRegistrationSerializer(RegisterSerializer):
+class MyRegistrationSerializer(CountryFieldMixin, RegisterSerializer):
     first_name = serializers.CharField(required=True, write_only=True)
     last_name = serializers.CharField(required=True, write_only=True)
     address1 = serializers.CharField(required=True)
@@ -107,7 +109,7 @@ class MyRegistrationSerializer(RegisterSerializer):
     
         return user
 
-class UserSerializer(serializers.ModelSerializer):
+class UserSerializer(CountryFieldMixin  ,serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser

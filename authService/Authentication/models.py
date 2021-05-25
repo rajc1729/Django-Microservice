@@ -22,6 +22,9 @@ class Employer(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
     company_name = models.CharField(unique=True, max_length = 50)
 
+    def __str__(self):
+        return self.company_name
+
 
 class Employee(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
