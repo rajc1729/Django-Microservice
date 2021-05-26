@@ -11,7 +11,7 @@ const DynamicMap = dynamic(() => import("../components/DynamicMap"), {
 });
 
 const Employee: React.SFC<{}> = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [APIError, setAPIError] = useState(null);
 
   const getEmployerDetils = async () => {
@@ -67,7 +67,7 @@ const Employee: React.SFC<{}> = () => {
     <>
       <Header />
       <div style={{ width: "100%", height: "100%", marginTop: "60px" }}>
-        {data && <DynamicMap data={data} />}
+        <DynamicMap data={data} />
       </div>
     </>
   );
